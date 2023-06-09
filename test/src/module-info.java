@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author choeeungyeong
- *
- */
-module test {
-}
