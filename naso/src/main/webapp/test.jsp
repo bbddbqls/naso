@@ -8,6 +8,6 @@
 <title>회원 정보 출력창</title>
 </head>
 <body>
-실패
+실패!
 </body>
 </html>
