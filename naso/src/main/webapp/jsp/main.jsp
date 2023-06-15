@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page
+	import="org.json.simple.JSONObject, org.json.simple.parser.JSONParser, org.json.simple.parser.ParseException"%>
+
 
 <!DOCTYPE html>
 <html lang="ko-kr">
@@ -14,7 +17,7 @@
 	rel="stylesheet"
 	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/main.css?ss">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
@@ -163,14 +166,14 @@
 									aria-label="Close"></button>
 							</div>
 							<div class="modal-body" style="width: 100%; height: 60vh">
-								<div class="container-fluid">
-									<div
-										class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
-										<c:choose>
-											<c:when test="${empty photoList}">
-												<p>이미지가 없습니다.</p>
-											</c:when>
-											<c:otherwise>
+								<c:choose>
+									<c:when test="${empty photoList}">
+										<div class="col-12 text-center">게시물이 없습니다.</div>
+									</c:when>
+									<c:otherwise>
+										<div class="container-fluid">
+											<div
+												class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
 												<c:forEach var="photoItem" items="${photoList}">
 													<div class="col photo-item" data-bs-toggle="modal"
 														data-bs-target="#detailPhoto${photoItem.getPNum()}">
@@ -178,10 +181,11 @@
 															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}">
 													</div>
 												</c:forEach>
-											</c:otherwise>
-										</c:choose>
-									</div>
-								</div>
+											</div>
+										</div>
+									</c:otherwise>
+								</c:choose>
+
 							</div>
 							<div class="modal-footer">
 								<button class="my-button org-btn" type="button"
@@ -211,11 +215,11 @@
 											<div class="col-lg-6 d-flex justify-content-center"
 												style="waspect-ratio: auto 1/1;">
 												<div class="upload-preview">
-<!-- 													<label class="my-button" id="upimg-btn" for="input-photo">업로드 <input
+													<!-- 													<label class="my-button" id="upimg-btn" for="input-photo">업로드 <input
 														class="d-none" type="file" id="input-photo" name="image"
 														accept="image/*" onchange="previewImage(event)" />
 													</label> -->
-													 <input id="input-photo" name="input-photo" type="file" />
+													<input id="input-photo" name="input-photo" type="file" />
 												</div>
 											</div>
 											<div class="col-lg-6 ">
@@ -238,8 +242,6 @@
 									onmouseover="this.style.backgroundColor='#FFA500';"
 									onmouseout="this.style.backgroundColor='#FF7F00';">Submit</button>
 								<!-- type="submit" form="upload-image" -->
-								<script src="../js/fileupload.js"></script>
-								<script src="../js/putFile.js"></script>
 							</div>
 						</div>
 					</div>
@@ -282,7 +284,8 @@
 											<img src="../images/yubin/talk.png" alt="">
 											<p>0</p>
 										</div>
-										<div class="container-fluid select-modal-comment">
+										<div class="container-fluid select-modal-comment"
+											id="modalPhotoComments${photoItem.getPNum()}">
 											<ul>
 												<li>
 													<div class="comment-list">
@@ -293,53 +296,22 @@
 															<p>
 																<strong>유저이름</strong>
 															</p>
-															<p>
-																<span class="comment">아아아 너무 어렵다...아아아 너무
-																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
-															</p>
-														</div>
-													</div>
-												</li>
-												<li>
-													<div class="comment-list">
-														<div class="user-profile-img">
-															<img src="../images/yubin/person.png" alt="">
-														</div>
-														<div class="user-profile-name">
-															<p>
-																<strong>유저이름</strong>
-															</p>
-															<p>
-																<span class="comment">아아아 너무 어렵다...아아아 너무
-																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
-															</p>
-														</div>
-													</div>
-												</li>
-												<li>
-													<div class="comment-list">
-														<div class="user-profile-img">
-															<img src="../images/yubin/person.png" alt="">
-														</div>
-														<div class="user-profile-name">
-															<p>
-																<strong>유저이름</strong>
-															</p>
-															<p>
-																<span class="comment">아아아 너무 어렵다...아아아 너무
-																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
+															<p class="comment">
+																	아아아 너무 어렵다...아아아 너무
+																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...
 															</p>
 														</div>
 													</div>
 												</li>
 											</ul>
 										</div>
-										<div class="input-group mb-3 select-modal-entercomment">
+										<div class="input-group mb-3 select-modal-entercomment"
+											id="modalPhotoAddComments${photoItem.getPNum()}">
 											<input type="text" class="form-control"
 												placeholder="댓글 달기..." aria-label="댓글 달기..."
 												aria-describedby="button-addon2">
 											<button class="btn btn-outline-secondary" type="button"
-												id="button-addon2" btn-outline-secondary>게시</button>
+												id="button-addon2" data-pnum="${photoItem.getPNum()}">게시</button>
 										</div>
 									</div>
 								</div>
@@ -369,31 +341,25 @@
 									aria-label="Close"></button>
 							</div>
 							<div class="modal-body" style="height: 60vh">
-								<div class="container-fluid">
-									<div
-										class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
-										<c:choose>
-											<c:when test="${empty videoList}">
-												<div class="col video-item">
-													<img class=""
-														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${videoItem.mediaS3}"
-														alt="">
-												</div>
-											</c:when>
-											<c:otherwise>
+								<c:choose>
+									<c:when test="${empty videoList}">
+										<div class="col-12 text-center">게시물이 없습니다.</div>
+									</c:when>
+									<c:otherwise>
+										<div class="container-fluid">
+											<div
+												class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
 												<c:forEach var="videoItem" items="${videoList}">
 													<div class="col video-item" data-bs-toggle="modal"
 														data-bs-target="#detailVideo${videoItem.getPNum()}">
-														<img class=""
-															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${videoItem.mediaS3}"
-															alt="">
+														<img
+															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${videoItem.mediaS3}">
 													</div>
 												</c:forEach>
-											</c:otherwise>
-										</c:choose>
-									</div>
-
-								</div>
+											</div>
+										</div>
+									</c:otherwise>
+								</c:choose>
 							</div>
 							<div class="modal-footer">
 								<button class="my-button" type="button" data-bs-toggle="modal"
@@ -480,37 +446,6 @@
 														</p>
 													</div>
 												</div>
-											</li>
-											<div class="comment-list">
-												<div class="user-profile-img">
-													<img src="../images/yubin/person.png" alt="">
-												</div>
-												<div class="user-profile-name">
-													<p>
-														<strong>유저이름</strong>
-													</p>
-													<p>
-														<span class="comment">아아아 너무 어렵다...아아아 너무 어렵다...아아아
-															너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
-													</p>
-												</div>
-											</div>
-											</li>
-											</li>
-											<div class="comment-list">
-												<div class="user-profile-img">
-													<img src="../images/yubin/person.png" alt="">
-												</div>
-												<div class="user-profile-name">
-													<p>
-														<strong>유저이름</strong>
-													</p>
-													<p>
-														<span class="comment">아아아 너무 어렵다...아아아 너무 어렵다...아아아
-															너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
-													</p>
-												</div>
-											</div>
 											</li>
 										</ul>
 									</div>
@@ -733,6 +668,10 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="../js/main.js"></script>
+	<script src="../js/reply.js"></script>
+	<script src="../js/fileupload.js"></script>
+	<script src="../js/putFile.js"></script>
 </body>
 </html>

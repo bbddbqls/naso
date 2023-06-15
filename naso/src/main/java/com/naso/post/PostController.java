@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import org.json.simple.JSONObject;
 
 @WebServlet("/post/*")
 public class PostController extends HttpServlet {
@@ -79,6 +80,29 @@ public class PostController extends HttpServlet {
 				}
 				break;
 			}
+			case "/upReply.do": {
+			    PostDAO pd = new PostDAO();
+			    String pNum = request.getParameter("pNum");
+			    String commentText = request.getParameter("commentText");
+			    String userId = (String) session.getAttribute("id");
+
+			    if (pd.createComment(pNum, userId, commentText)) {
+			        // JSON 형태의 응답 데이터 생성
+			        JSONObject jsonResponse = new JSONObject();
+			        jsonResponse.put("userName", userId);
+			        jsonResponse.put("commentText", commentText);
+
+			        // 응답 데이터 전송
+			        response.setContentType("application/json");
+			        response.setCharacterEncoding("UTF-8");
+			        response.getWriter().write(jsonResponse.toString());
+			    } else {
+			        System.out.println("실패");
+			        nextPage = "/test.jsp";
+			    }
+			    break;
+			}
+
 			/*
 			 * case "/diaryInput.do": { PostDAO pd = new PostDAO();
 			 * 

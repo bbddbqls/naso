@@ -92,6 +92,7 @@ textarea {
 
 .select-modal-user {
 	aspect-ratio: auto 1/0.1;
+	padding-top: 5px;
 }
 
 .select-modal-text {
@@ -122,7 +123,10 @@ textarea {
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
-
+.select-modal-comment ul{
+	padding-left: 0;
+	padding-right: 5%;
+}
 .select-modal-comment::-webkit-scrollbar {
 	display: none;
 	/* Chrome, Safari, Opera*/
@@ -289,4 +293,22 @@ label>button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+.comment {
+  position: relative;
+  display: inline-block;
+  background-color: #D3D3D3;
+  border-radius: 5px;
+  padding: 3px;
+}
+.comment:before {
+  content: '';
+  position: absolute;
+  top:-8px;
+  left:16px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #D3D3D3;
 }
