@@ -63,8 +63,8 @@
 	<main class="container-fluid">
 		<div class="row" style="text-align: center;">
 			<span
-				style="color: black; font-family: 'Caveat', cursive; font-size: 50px; font-weight: bold;">Naso:<c:out
-					value="${photoList[0].userId}" />
+				style="color: black; font-family: 'Caveat', cursive; font-size: 50px; font-weight: bold;">
+				Naso:<c:out value="${photoList[0].userId}" />
 			</span>
 			<!-- 사이드바 -->
 			<div class="col-lg-2 text-lg-start">
@@ -154,7 +154,8 @@
 				<!-- 포토 모달 -->
 				<div class="modal fade" id="modalPhoto" tabindex="-1"
 					aria-labelledby="modalPhotoLabel1" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+					<div
+						class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="modalPhotoLabel1">Photo Gallery</h5>
@@ -163,18 +164,18 @@
 							</div>
 							<div class="modal-body" style="width: 100%; height: 60vh">
 								<div class="container-fluid">
-									<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
+									<div
+										class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
 										<c:choose>
-											<c:when test="${photoList==null}">
+											<c:when test="${empty photoList}">
 												<p>이미지가 없습니다.</p>
 											</c:when>
 											<c:otherwise>
 												<c:forEach var="photoItem" items="${photoList}">
 													<div class="col photo-item" data-bs-toggle="modal"
 														data-bs-target="#detailPhoto${photoItem.getPNum()}">
-														<img class=""
-															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}"
-															alt="">
+														<img
+															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}">
 													</div>
 												</c:forEach>
 											</c:otherwise>
@@ -183,8 +184,10 @@
 								</div>
 							</div>
 							<div class="modal-footer">
-								<button class="my-button" type="button" data-bs-toggle="modal"
-									data-bs-target="#postPhoto">Post</button>
+								<button class="my-button org-btn" type="button"
+									data-bs-toggle="modal" data-bs-target="#postPhoto"
+									onmouseover="this.style.backgroundColor='#FFA500';"
+									onmouseout="this.style.backgroundColor='#FF7F00';">Post</button>
 							</div>
 						</div>
 					</div>
@@ -201,18 +204,18 @@
 									aria-label="Close"></button>
 							</div>
 							<div class="modal-body" style="height: 60vh">
-								<form action="imageUpload.do" method="post" id="upload-image" enctype="multpart/form-data">
+								<form action="imageUpload.do" method="post" id="upload-image"
+									enctype="multpart/form-data">
 									<div class="container">
 										<div class="row">
 											<div class="col-lg-6 d-flex justify-content-center"
 												style="waspect-ratio: auto 1/1;">
 												<div class="upload-preview">
-													<!-- 													<label class="my-button" for="input-photo">업로드
-													<input class="d-none"
-														type="file" id="input-photo" name="image" accept="image/*"
-														onchange="previewImage(event)" />
-														</label> -->
-													<input id="input-photo" name="input-photo" type="file" />
+<!-- 													<label class="my-button" id="upimg-btn" for="input-photo">업로드 <input
+														class="d-none" type="file" id="input-photo" name="image"
+														accept="image/*" onchange="previewImage(event)" />
+													</label> -->
+													 <input id="input-photo" name="input-photo" type="file" />
 												</div>
 											</div>
 											<div class="col-lg-6 ">
@@ -223,7 +226,6 @@
 														value="1" checked>모두 공개</label> <label><input
 														type="radio" name="exposure" value="2">친구만 공개</label>
 												</div>
-												<div style="height: 300px;"></div>
 											</div>
 										</div>
 									</div>
@@ -232,7 +234,9 @@
 							<div class="modal-footer">
 								<button class="btn btn-secondary" data-bs-target="#modalPhoto"
 									data-bs-toggle="modal" role="button">Return</button>
-								<button class="my-button" id="upload-button">Submit</button>
+								<button class="my-button" id="upload-button"
+									onmouseover="this.style.backgroundColor='#FFA500';"
+									onmouseout="this.style.backgroundColor='#FF7F00';">Submit</button>
 								<!-- type="submit" form="upload-image" -->
 								<script src="../js/fileupload.js"></script>
 								<script src="../js/putFile.js"></script>
@@ -241,41 +245,20 @@
 					</div>
 				</div>
 
-				<!-- 사진 등록 확인 모달 -->
-				<!-- 				<div class="modal fade" id="modalCheck" tabindex="-1"
-					aria-labelledby="modalCheckLabel1" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-scrollable modal-sm">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<p>사진을 등록 하시겠습니까?</p>
-							</div>
-							<div class="modal-footer">
-								<button class="btn btn-secondary" type="button"
-									data-bs-dismiss="modal">취소</button>
-								<button class="my-button" data-bs-toggle="modal"
-									 type="submit" form="upload-image">등록</button>
-							</div>
-						</div>
-					</div>
-				</div> -->
 				<!-- from yubin 포토모달에서 상세보기-->
 				<c:forEach var="photoItem" items="${photoList}">
 					<div class="modal fade" id="detailPhoto${photoItem.getPNum()}"
 						tabindex="-1" aria-labelledby="detailPhotoLabel"
 						aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+						<div
+							class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title" id="detailPhotoLabel">${photoItem.title}</h5>
+									<h5 class="modal-title" id="detailPhotoLabel">Photo</h5>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
-								<div class="modal-body row select-modal"
-									style=" height: 60vh">
+								<div class="modal-body row select-modal" style="height: 60vh">
 									<div class="container col-lg-6 select-modal-img">
 										<div class="img-box">
 											<img
@@ -317,36 +300,37 @@
 														</div>
 													</div>
 												</li>
-												<div class="comment-list">
-													<div class="user-profile-img">
-														<img src="../images/yubin/person.png" alt="">
+												<li>
+													<div class="comment-list">
+														<div class="user-profile-img">
+															<img src="../images/yubin/person.png" alt="">
+														</div>
+														<div class="user-profile-name">
+															<p>
+																<strong>유저이름</strong>
+															</p>
+															<p>
+																<span class="comment">아아아 너무 어렵다...아아아 너무
+																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
+															</p>
+														</div>
 													</div>
-													<div class="user-profile-name">
-														<p>
-															<strong>유저이름</strong>
-														</p>
-														<p>
-															<span class="comment">아아아 너무 어렵다...아아아 너무
-																어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
-														</p>
-													</div>
-												</div>
 												</li>
-												</li>
-												<div class="comment-list">
-													<div class="user-profile-img">
-														<img src="../images/yubin/person.png" alt="">
+												<li>
+													<div class="comment-list">
+														<div class="user-profile-img">
+															<img src="../images/yubin/person.png" alt="">
+														</div>
+														<div class="user-profile-name">
+															<p>
+																<strong>유저이름</strong>
+															</p>
+															<p>
+																<span class="comment">아아아 너무 어렵다...아아아 너무
+																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
+															</p>
+														</div>
 													</div>
-													<div class="user-profile-name">
-														<p>
-															<strong>유저이름</strong>
-														</p>
-														<p>
-															<span class="comment">아아아 너무 어렵다...아아아 너무
-																어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...</span>
-														</p>
-													</div>
-												</div>
 												</li>
 											</ul>
 										</div>
@@ -355,16 +339,17 @@
 												placeholder="댓글 달기..." aria-label="댓글 달기..."
 												aria-describedby="button-addon2">
 											<button class="btn btn-outline-secondary" type="button"
-												id="button-addon2">게시</button>
+												id="button-addon2" btn-outline-secondary>게시</button>
 										</div>
 									</div>
 								</div>
 								<div class="modal-footer">
-									<!-- <button type="button" class="btn btn-primary" data-bs-target="#modalPhoto">Previous</button> -->
-									<a class="btn btn-primary" data-bs-toggle="modal"
+									<a class="btn btn-secondary" data-bs-toggle="modal"
 										href="#modalPhoto" role="button">Return</a>
-									<button type="button" class="btn btn-secondary"
-										data-bs-dismiss="modal">Close</button>
+									<button type="button" class="my-button org-btn"
+										data-bs-dismiss="modal"
+										onmouseover="this.style.backgroundColor='#FFA500';"
+										onmouseout="this.style.backgroundColor='#FF7F00';">Close</button>
 								</div>
 							</div>
 						</div>
@@ -375,7 +360,8 @@
 				<!-- 비디오 모달 -->
 				<div class="modal fade" id="modalVideo" tabindex="-1"
 					aria-labelledby="modalVideoLabel1" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+					<div
+						class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="modalVideoLabel1">Video Gallery</h5>
@@ -384,10 +370,15 @@
 							</div>
 							<div class="modal-body" style="height: 60vh">
 								<div class="container-fluid">
-								<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
+									<div
+										class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
 										<c:choose>
-											<c:when test="${videoList==null}">
-												<p>이미지가 없습니다.</p>
+											<c:when test="${empty videoList}">
+												<div class="col video-item">
+													<img class=""
+														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${videoItem.mediaS3}"
+														alt="">
+												</div>
 											</c:when>
 											<c:otherwise>
 												<c:forEach var="videoItem" items="${videoList}">
@@ -440,15 +431,15 @@
 				<!-- from yubin 비디오 모달에서 상세보기-->
 				<div class="modal fade" id="detailVideo" tabindex="-1"
 					aria-labelledby="detailVideoLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+					<div
+						class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="detailVideoLabel">video</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="Close"></button>
 							</div>
-							<div class="modal-body row select-modal"
-								style=" height: 60vh;">
+							<div class="modal-body row select-modal" style="height: 60vh;">
 								<div class="container col-lg-6 select-modal-img">
 									<div class="img-box">
 										<video controls autoplay muted loop>
@@ -544,7 +535,8 @@
 				<!-- 다이어리 모달 -->
 				<div class="modal fade" id="modalDiary" tabindex="-1"
 					aria-labelledby="modalDiaryLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+					<div
+						class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="modalDiaryLabel">Photo Gallery</h5>
@@ -573,7 +565,8 @@
 				<!-- 다이어리 글쓰기 모달 -->
 				<div class="modal fade" id="diary-write" tabindex="-1"
 					aria-labelledby="modalPhotoLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+					<div
+						class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="modalPhotoLabel">Photo Gallery</h5>
@@ -582,8 +575,8 @@
 							</div>
 							<div class="modal-body" style="height: 60vh;">
 								<div id="footer">
-									<form id="diary" onsubmit="addPost(); return false;">
-										<input type="text" id="title-input"
+									<form id="diary" onsubmit="addPost(); return false; action="diaryPost.do">
+										<input type="text" id="title-input" name="diaryText"
 											placeholder="제목을 입력해 주세요..." style="border-color: #b4b2b2;" />
 										<br>
 										<textarea id="content-input" placeholder="내용을 입력해 주세요..."
@@ -613,27 +606,43 @@
 					data-bs-ride="carousel">
 					<div class="carousel-inner">
 						<c:choose>
-							<c:when test="${photoList==null}">
-								<p>이미지가 없습니다.</p>
+							<c:when test="${empty photoList}">
+								<div class="no-item">게시물이 없습니다.</div>
 							</c:when>
 							<c:otherwise>
-								<c:forEach var="photoItem" items="${photoList}">
-									<div class="carousel-item active">
-										<div class="ratio ratio-1x1"
-											style="background-color: black; display: flex; align-items: center; justify-content: center;">
-											<img class="img-fluid" type="button" data-bs-toggle="modal"
-												data-bs-target="#detailPhoto${photoItem.getPNum()}"
-												src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}"
-												alt="
+								<c:forEach var="photoItem" items="${photoList}"
+									varStatus="status">
+									<c:choose>
+										<c:when test="${status.index == 0}">
+											<div class="carousel-item active">
+												<div class="ratio ratio-1x1"
+													style="background-color: black; display: flex; align-items: center; justify-content: center;">
+													<img class="img-fluid" type="button" data-bs-toggle="modal"
+														data-bs-target="#detailPhoto${photoItem.getPNum()}"
+														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}"
+														alt="
 												Image 1"
-												style="max-width: 100%; max-height: 100%; object-fit: contain;">
-										</div>
-									</div>
+														style="max-width: 100%; max-height: 100%; object-fit: contain;">
+												</div>
+											</div>
+										</c:when>
+										<c:otherwise>
+											<div class="carousel-item">
+												<div class="ratio ratio-1x1"
+													style="background-color: black; display: flex; align-items: center; justify-content: center;">
+													<img class="img-fluid" type="button" data-bs-toggle="modal"
+														data-bs-target="#detailPhoto${photoItem.getPNum()}"
+														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}"
+														alt="
+												Image 1"
+														style="max-width: 100%; max-height: 100%; object-fit: contain;">
+												</div>
+											</div>
+										</c:otherwise>
+									</c:choose>
 								</c:forEach>
 							</c:otherwise>
 						</c:choose>
-
-
 						<!-- 추가적인 이미지 태그를 원하는 만큼 추가 가능 -->
 					</div>
 					<!-- 포토 갤러리 슬라이드 버튼 -->
@@ -656,8 +665,8 @@
 					<div class="carousel-inner">
 
 						<c:choose>
-							<c:when test="${videoList==null}">
-								<p>이미지가 없습니다.</p>
+							<c:when test="${empty videoList}">
+								<div class="no-item">게시물이 없습니다.</div>
 							</c:when>
 							<c:otherwise>
 								<c:forEach var="videoItem" items="${videoList}">

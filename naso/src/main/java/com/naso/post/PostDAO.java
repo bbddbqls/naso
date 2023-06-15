@@ -35,10 +35,9 @@ public class PostDAO {
 
             con = ds.getConnection();
 
-            String query = "SELECT * FROM POST WHERE P_USER_ID = ? AND P_CATEGORY = ?";
+            String query = "SELECT * FROM POST WHERE P_USER_ID = ? AND P_CATEGORY = 'photo' ORDER BY P_DATETIME_CREATED DESC";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, userId);
-            pstmt.setString(2, "photo");
 
             rs = pstmt.executeQuery();
 
@@ -85,10 +84,9 @@ public class PostDAO {
         try {
             con = ds.getConnection();
 
-            String query = "SELECT * FROM POST WHERE P_USER_ID = ? AND P_CATEGORY = ?";
+            String query = "SELECT * FROM POST WHERE P_USER_ID = ? AND P_CATEGORY = 'video' ORDER BY P_DATETIME_CREATED DESC";
             pstmt = con.prepareStatement(query);
             pstmt.setString(1, userId);
-            pstmt.setString(2, "video");
 
             rs = pstmt.executeQuery();
 

@@ -52,14 +52,16 @@ const generateRandomString = length => {
   	const form = document.getElementById('upload-image');
   	
   	const newInput = document.createElement('input');
-newInput.type = 'text';
+newInput.type = 'hidden';
 newInput.name = 'newFileName';
 newInput.value = newFileName;
+newInput.style.display = 'none';
 
 const newInput2 = document.createElement('input');
-newInput2.type = 'text';
+newInput2.type = 'hidden';
 newInput2.name = 'originalFileName';
 newInput2.value = file.name;
+newInput2.style.display = 'none';
 // 폼에 새로운 input 추가
 form.appendChild(newInput);
 form.appendChild(newInput2);

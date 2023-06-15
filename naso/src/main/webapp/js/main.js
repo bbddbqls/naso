@@ -106,26 +106,23 @@ searchInput.addEventListener("keydown", function(event) {
   }
   
 // 포토 모달 글쓰기 창에서 사진 업로드하면 업로드한 사진 표시
+var selectedFile; // 전역 변수
+
 function previewImage(event) {
-    var previewContainer = document.querySelector('.upload-preview');
-    var inputphoto = document.getElementsByClassName('my-button');
-    var file = event.target.files[0];
-    var reader = new FileReader();
+  var previewContainer = document.querySelector('.upload-preview');
+  var file = event.target.files[0];
+  selectedFile = file;
+  var reader = new FileReader();
 
-    reader.onloadend = function () {
-        previewContainer.textContent = '';
-        var image = document.createElement('img');
-        image.src = reader.result;
-        previewContainer.appendChild(image);
-    }
-
-    if (file) {
-        reader.readAsDataURL(file);
-        inputphoto.style.display = 'none';
-    } else {
-        inputphoto.style.display = 'block';
-    }
+  reader.onloadend = function() {
+    previewContainer.textContent = '';
+    var image = document.createElement('img');
+    image.src = reader.result;
+    previewContainer.appendChild(image);
+    
+  };
 }
+
 // 
 function uploadImage(event) {
   event.preventDefault();
