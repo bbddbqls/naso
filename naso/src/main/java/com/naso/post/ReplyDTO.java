@@ -8,6 +8,10 @@ public class ReplyDTO {
     private String rContent;
     private Timestamp rDatetimeCreated;
 
+    public ReplyDTO() {
+    	
+    }
+    
     public ReplyDTO(String rNum, String pNum, String rUserId, String rContent, Timestamp rDatetimeCreated) {
         this.rNum = rNum;
         this.pNum = pNum;

@@ -163,7 +163,44 @@ public class PostDAO {
 
 		return success;
 	}
+	//댓글 리스트 출력
+	public ArrayList<ReplyDTO> getCommentsByPNum(String pNum) throws SQLException {
+		ArrayList<ReplyDTO> list = new ArrayList<>();
+		ResultSet rs = null;
 
+		try {
+			con = ds.getConnection();
+
+			String query = "SELECT *FROM reply WHERE P_NUM = ? ORDER BY R_DATETIME_CREATED DESC";
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, pNum);
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ReplyDTO reply = new ReplyDTO();
+
+				reply.setRUserId(rs.getString("R_USER_ID"));
+				reply.setRContent(rs.getString("R_CONTENT"));
+				reply.setRDatetimeCreated(rs.getTimestamp("R_DATETIME_CREATED"));
+
+				list.add(reply);
+			}
+		} finally {
+			// 사용한 자원 해제
+			if (rs != null) {
+				rs.close();
+			}
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (con != null) {
+				con.close();
+			}
+		}
+
+		return list;
+	}
 	// 댓글 생성
 	public boolean createComment(String pNum, String userId, String commentText) {
 		// 데이터베이스 연결을 위한 코드

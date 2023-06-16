@@ -2,6 +2,7 @@ package com.naso.post;
 
 import java.io.Console;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import com.google.gson.Gson;
 
 @WebServlet("/post/*")
 public class PostController extends HttpServlet {
@@ -80,27 +83,68 @@ public class PostController extends HttpServlet {
 				}
 				break;
 			}
-			case "/upReply.do": {
-			    PostDAO pd = new PostDAO();
-			    String pNum = request.getParameter("pNum");
-			    String commentText = request.getParameter("commentText");
-			    String userId = (String) session.getAttribute("id");
+			case "/replyShow.do": {
+				PostDAO pd = new PostDAO();
+				String pNum = request.getParameter("pNum");
 
-			    if (pd.createComment(pNum, userId, commentText)) {
-			        // JSON 형태의 응답 데이터 생성
-			        JSONObject jsonResponse = new JSONObject();
-			        jsonResponse.put("userName", userId);
-			        jsonResponse.put("commentText", commentText);
-
+				ArrayList<ReplyDTO> comments = new ArrayList<>();
+				// 포토리스트 저장하는 곳
+				try {
+			        comments = pd.getCommentsByPNum(pNum);
+			        
+			        // 댓글 목록을 JSON 배열로 변환
+//			        JSONArray jsonArray = new JSONArray();
+			        
+//			        for (ReplyDTO comment : comments) {
+//			        	System.out.println(comments);
+//			            JSONObject jsonComment = new JSONObject();
+//			            jsonComment.put("userName", comment.getRUserId());
+//			            jsonComment.put("commentText", comment.getRContent());
+//			            jsonArray.add(jsonComment);
+//			        }
+			        
+			        // 응답 데이터 생성
+//			        JSONObject jsonResponse = new JSONObject();
+//			        jsonResponse.put("comments", jsonArray);
+			        
 			        // 응답 데이터 전송
+			        Gson gson = new Gson();
+			        String json = gson.toJson(comments);
 			        response.setContentType("application/json");
 			        response.setCharacterEncoding("UTF-8");
-			        response.getWriter().write(jsonResponse.toString());
-			    } else {
-			        System.out.println("실패");
-			        nextPage = "/test.jsp";
+			        PrintWriter out = response.getWriter();
+			        out.print(json);
+			        out.flush();
+//			        response.getWriter().print(jsonResponse.toString());
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			        // 처리 중 예외 발생 시 예외 처리
 			    }
-			    break;
+
+				nextPage = "/jsp/main.jsp";
+				break;
+			}
+			case "/replyUpload.do": {
+				PostDAO pd = new PostDAO();
+				String pNum = request.getParameter("pNum");
+				String commentText = request.getParameter("commentText");
+				String userId = (String) session.getAttribute("id");
+
+				if (pd.createComment(pNum, userId, commentText)) {
+					// JSON 형태의 응답 데이터 생성
+					JSONObject jsonResponse = new JSONObject();
+					jsonResponse.put("userName", userId);
+					jsonResponse.put("commentText", commentText);
+
+					// 응답 데이터 전송
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					response.getWriter().write(jsonResponse.toString());
+				} else {
+					System.out.println("실패");
+					nextPage = "/test.jsp";
+				}
+				break;
 			}
 
 			/*

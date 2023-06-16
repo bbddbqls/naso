@@ -176,9 +176,9 @@
 												class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
 												<c:forEach var="photoItem" items="${photoList}">
 													<div class="col photo-item" data-bs-toggle="modal"
-														data-bs-target="#detailPhoto${photoItem.getPNum()}">
+														>
 														<img
-															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}">
+															src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}" class="image-click" data-pnum="${photoItem.getPNum()}">
 													</div>
 												</c:forEach>
 											</div>
@@ -256,7 +256,7 @@
 							class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title" id="detailPhotoLabel">Photo</h5>
+									<h5 class="modal-title">Photo</h5>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
@@ -282,35 +282,20 @@
 											<img src="../images/yubin/heart.png" alt="">
 											<p>${photoItem.likeCount}</p>
 											<img src="../images/yubin/talk.png" alt="">
-											<p>0</p>
+											<p id="commentCount${photoItem.getPNum()}">0</p>
 										</div>
 										<div class="container-fluid select-modal-comment"
 											id="modalPhotoComments${photoItem.getPNum()}">
 											<ul>
-												<li>
-													<div class="comment-list">
-														<div class="user-profile-img">
-															<img src="../images/yubin/person.png" alt="">
-														</div>
-														<div class="user-profile-name">
-															<p>
-																<strong>유저이름</strong>
-															</p>
-															<p class="comment">
-																	아아아 너무 어렵다...아아아 너무
-																	어렵다...아아아 너무 어렵다...아아아 너무 어렵다...아아아 너무 어렵다...
-															</p>
-														</div>
-													</div>
-												</li>
+												
 											</ul>
 										</div>
 										<div class="input-group mb-3 select-modal-entercomment"
 											id="modalPhotoAddComments${photoItem.getPNum()}">
-											<input type="text" class="form-control"
+											<input type="text" class="form-control "
 												placeholder="댓글 달기..." aria-label="댓글 달기..."
 												aria-describedby="button-addon2">
-											<button class="btn btn-outline-secondary" type="button"
+											<button class="btn btn-outline-secondary addon" type="button"
 												id="button-addon2" data-pnum="${photoItem.getPNum()}">게시</button>
 										</div>
 									</div>
@@ -552,9 +537,9 @@
 											<div class="carousel-item active">
 												<div class="ratio ratio-1x1"
 													style="background-color: black; display: flex; align-items: center; justify-content: center;">
-													<img class="img-fluid" type="button" data-bs-toggle="modal"
+													<img class="img-fluid image-click" data-pnum="${photoItem.getPNum()}" data-bs-toggle="modal" 
 														data-bs-target="#detailPhoto${photoItem.getPNum()}"
-														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}"
+														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3} "
 														alt="
 												Image 1"
 														style="max-width: 100%; max-height: 100%; object-fit: contain;">
@@ -565,7 +550,7 @@
 											<div class="carousel-item">
 												<div class="ratio ratio-1x1"
 													style="background-color: black; display: flex; align-items: center; justify-content: center;">
-													<img class="img-fluid" type="button" data-bs-toggle="modal"
+													<img class="img-fluid image-click" data-pnum="${photoItem.getPNum()}" data-bs-toggle="modal"
 														data-bs-target="#detailPhoto${photoItem.getPNum()}"
 														src="https://naso-bucket.s3.ap-northeast-2.amazonaws.com/${photoItem.mediaS3}"
 														alt="
