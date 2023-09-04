@@ -22,3 +22,9 @@ function updateInfoConfirm() {
     }
     document.reg_frm.submit();
 }
+
+const probutton = document.getElementById('ProfileImg-upload-button');
+probutton.addEventListener('click', () => {
+	const inputProfileImg = document.getElementById('uploadInput');
+	putVideoFile(inputProfileImg.files[0]);
+})

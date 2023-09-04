@@ -34,8 +34,8 @@
    maxWaitMillis="-1"
    driverClassName="oracle.jdbc.OracleDriver"
    
-   url="jdbc:oracle:thin:@localhost:1522:XE"
-   username="c##yoobin"
+   url="jdbc:oracle:thin:@localhost:1521:XE"
+   username="C##NASO"
    password="1234"
 />
 </Context>

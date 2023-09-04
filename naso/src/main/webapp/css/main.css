@@ -10,7 +10,7 @@
 }
 
 /* 검색창 스타일 */
-input[type="search"] {
+input[name="keyword"] {
 	width: 100%;
 	padding: 10px 30px;
 	font-size: 16px;
@@ -24,7 +24,7 @@ input[type="search"] {
 /* 모달 스타일 */
 .modal-body {
 	-ms-overflow-style: none;
-	height: 55vh;
+	height: 60vh;
 }
 
 /* 모달 창 스크롤바 숨기기 */
@@ -51,6 +51,24 @@ input[type="search"] {
 .modal-body .photo-item:hover img {
 	transform: scale(1.05);
 }
+/* 비디오 모달 */
+.modal-body .video-item {
+	aspect-ratio: auto 1/1;
+	padding: 0px 3px 0px 3px;
+	background-clip: content-box;
+}
+
+.modal-body .video-item video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	cursor: pointer;
+	transition: all 0.2s linear;
+}
+
+.modal-body .video-item:hover video {
+	transform: scale(1.05);
+}
 
 .upload-preview {
 	width: 100%;
@@ -61,6 +79,7 @@ input[type="search"] {
 	align-items: center;
 	justify-content: center;
 }
+
 
 .upload-preview img {
 	width: 100%;
@@ -135,7 +154,11 @@ textarea {
 .select-modal-comment>ul>li {
 	padding: 3px 0;
 }
-
+.post-date {
+	float: right;
+	font-size: 14px;
+	color: #ff7f00;
+}
 .img-box {
 	width: 100%;
 	height: 100%;
@@ -299,7 +322,8 @@ label>button {
   display: inline-block;
   background-color: #D3D3D3;
   border-radius: 5px;
-  padding: 3px;
+  padding: 3px 10px 3px 10px;
+  min-width: 50px;
 }
 .comment:before {
   content: '';
@@ -311,4 +335,7 @@ label>button {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 8px solid #D3D3D3;
+}
+.click{
+	cursor: pointer;
 }

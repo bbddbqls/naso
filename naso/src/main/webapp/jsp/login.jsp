@@ -1,49 +1,54 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="ko-kr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-  <link rel="stylesheet" href="../css/login_boot.css">
+<html>
+<head>
+<meta charset="utf-8">
+<title>로그인등록</title>
+<link rel="stylesheet" href="../css/style.css?ssssf">
+
 </head>
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <!-- 좌측 (사진) -->
-      <div class="col-sm-4 text-end">
-        <img class="img-fluid" src="../images/loginphone7.png" alt="">
-      </div>
-      <!-- 우측 (문구 및 로그인) -->
-      <div class="col-sm-4 container-fluid px-5 mb-5 text-center">
-        <div class="row">
-          <div class="col-12">
-            <h3 class="logo-text">You and I Become Stars</h3>
-          </div>
-        </div>
-        <!-- 로그인 -->
-        <div class="row bg-white text-center border rounded shadow-lg mx-auto" style="width: 80%; margin-top: 95px;">
-          <div class="col">
-            <img class="my-4" src="../images/lo3.png" alt="NASO" height="40px">
-            <form method="post" action="login.do">
-              <input class="form-control my-2" type="text" id="signup-id" name="id" placeholder="id"/>
-              <input class="form-control my-2" type="password" id="signup-password" name="pw" placeholder="password"/>
-              <label for="rememberMe">
-                <input type="checkbox" id="rememberMe" /> Save login information
-              </label>
-              <button class="btn my-3" onclick="saveLoginInfo()">Log in</button>
-              <p><a href="#" style="text-decoration: none;">Find ID/PW</a> | <a href="#" style="text-decoration: none;">Sign Up</a></p>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-2"></div>
-    </div>
-  </div>
-  <script src="../js/login.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	<div class="container right-panel-active">
+		<!-- Sign Up -->
+		<div class="container__form container--signup">
+			<form action="/member/join.do" class="form" id="form1" method="post">
+				<h2 class="form__title">Sign Up</h2>
+				<input type="text" placeholder="ID" name="memberId" class="input" />
+				<input type="Password" placeholder="Password" name="memberPwd"
+					class="input" /> <input type="text" placeholder="Name"
+					name="memberName" class="input" /> <label for="gender"
+					class="form-label"> <input type="radio" name="memberGender"
+					value="남자" id="male">male <input type="radio"
+					name="memberGender" value="여자" id="female">female
+				</label>
+
+				<button class="btn" type="submit">Sign Up</button>
+			</form>
+		</div>
+
+		<!-- Sign In -->
+		<div class="container__form container--signin">
+			<form action="/member/login.do" class="form" id="form2" method="post">
+				<h2 class="form__title">Sign In</h2>
+				<input type="text" placeholder="ID" name="id" class="input" /> <input
+					type="password" placeholder="Password" name="pw" class="input" />
+				<button type="submit" class="btn">Sign In</button>
+			</form>
+		</div>
+
+		<!-- Overlay -->
+		<div class="container__overlay">
+			<div class="overlay">
+				<div class="overlay__panel overlay--left">
+					<button class="btn" id="signIn">Sign In</button>
+				</div>
+				<div class="overlay__panel overlay--right">
+					<button class="btn" id="signUp">Sign Up</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+<script src="../js/script.js?s"></script>
 </html>

@@ -17,6 +17,9 @@ import javax.servlet.http.Part;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import com.google.gson.Gson;
+import com.naso.follow.FollowDAO;
+import com.naso.member.MemberDAO;
+import com.naso.member.MemberDTO;
 
 @WebServlet("/post/*")
 public class PostController extends HttpServlet {
@@ -45,21 +48,64 @@ public class PostController extends HttpServlet {
 			switch (action) {
 			case "/my.do": {
 				PostDAO pd = new PostDAO();
-				String userId = (String) session.getAttribute("id");
-
-				ArrayList<PostDTO> photoList = new ArrayList<>();
-				ArrayList<PostDTO> videoList = new ArrayList<>();
+				MemberDAO md = new MemberDAO();
+				String mNum = (String) session.getAttribute("mNum");
+				String mUserId = (String) session.getAttribute("id");
+				ArrayList<PostDTO.PostItemDTO> photoList = new ArrayList<>();
+				ArrayList<PostDTO.PostItemDTO> videoList = new ArrayList<>();
+				ArrayList<PostDTO.DiaryDTO> diaryList = new ArrayList<>();
+				MemberDTO member = new MemberDTO();
 				// 포토리스트 저장하는 곳
 				try {
-					photoList = pd.photoList(userId);
-					videoList = pd.videoList(userId);
+					photoList = pd.photoList(mNum, true);
+					videoList = pd.videoList(mNum, true);
+					diaryList = pd.getdiarylist(mNum);
+					member = md.getMemberInfo(mNum);
 				} catch (SQLException e) {
 					e.printStackTrace();
 					// 처리 중 예외 발생 시 예외 처리
 				}
-
+				request.setAttribute("mNum", mNum);
+				request.setAttribute("mUserId", mUserId);
+				request.setAttribute("member", member);
 				request.setAttribute("photoList", photoList);
 				request.setAttribute("videoList", videoList);
+				request.setAttribute("diaryList", diaryList);
+
+				nextPage = "/jsp/main.jsp";
+				break;
+			}
+			case "/other.do": {
+				PostDAO pd = new PostDAO();
+				MemberDAO md = new MemberDAO();
+				FollowDAO fd = new FollowDAO();
+				String myMNum = (String) session.getAttribute("mNum");
+				String othMNum = request.getParameter("mNum");
+				String mUserId = null;
+				ArrayList<PostDTO.PostItemDTO> photoList = new ArrayList<>();
+				ArrayList<PostDTO.PostItemDTO> videoList = new ArrayList<>();
+				ArrayList<PostDTO.DiaryDTO> diaryList = new ArrayList<>();
+				MemberDTO member = new MemberDTO();
+				// 포토리스트 저장하는 곳
+				try {
+					Boolean check = fd.checkFollow(myMNum, othMNum);
+					System.out.println(check);
+
+					photoList = pd.photoList(othMNum, check);
+					videoList = pd.videoList(othMNum, check);
+					diaryList = pd.getdiarylist(othMNum);
+					mUserId = pd.getUID(othMNum);
+					member = md.getMemberInfo(othMNum);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					// 처리 중 예외 발생 시 예외 처리
+				}
+				request.setAttribute("mNum", othMNum);
+				request.setAttribute("mUserId", mUserId);
+				request.setAttribute("photoList", photoList);
+				request.setAttribute("videoList", videoList);
+				request.setAttribute("diaryList", diaryList);
+				request.setAttribute("member", member);
 
 				nextPage = "/jsp/main.jsp";
 				break;
@@ -67,14 +113,15 @@ public class PostController extends HttpServlet {
 			case "/imageUpload.do": {
 				PostDAO pd = new PostDAO();
 
-				String userID = (String) session.getAttribute("id");
+				String mNum = (String) session.getAttribute("mNum");
+
 				String exposure = request.getParameter("exposure");
 				String category = "photo";
 				String originalFileName = request.getParameter("originalFileName");
 				String newFileName = request.getParameter("newFileName");
 				String content = request.getParameter("content");
 
-				if (pd.insertPhoto(userID, exposure, category, originalFileName, newFileName, content) == true) {
+				if (pd.insertPhoto(mNum, exposure, category, originalFileName, newFileName, content) == true) {
 					nextPage = "/post/my.do";
 					System.out.println("성공");
 				} else {
@@ -83,18 +130,47 @@ public class PostController extends HttpServlet {
 				}
 				break;
 			}
+			case "/videoUpload.do": {
+				PostDAO pd = new PostDAO();
+
+				String mNum = (String) session.getAttribute("mNum");
+
+				String exposure = request.getParameter("exposure");
+				String category = "video";
+				String originalFileName = request.getParameter("originalFileName");
+				String newFileName = request.getParameter("newFileName");
+				String content = request.getParameter("content");
+
+				if (pd.insertPhoto(mNum, exposure, category, originalFileName, newFileName, content) == true) {
+					nextPage = "/post/my.do";
+					System.out.println("성공");
+				} else {
+					System.out.println("실패");
+					nextPage = "/test.jsp";
+				}
+				break;
+			}
+			case "/postDelete.do": {
+				PostDAO pd = new PostDAO();
+				String pNum = request.getParameter("pNum");
+				
+				if(pd.deletePost(pNum)) {
+					nextPage = "/post/my.do";
+				}
+				break;
+			}
 			case "/replyShow.do": {
 				PostDAO pd = new PostDAO();
 				String pNum = request.getParameter("pNum");
 
-				ArrayList<ReplyDTO> comments = new ArrayList<>();
+				ArrayList<PostDTO.PostReplyDTO> comments = new ArrayList<>();
 				// 포토리스트 저장하는 곳
 				try {
-			        comments = pd.getCommentsByPNum(pNum);
-			        
-			        // 댓글 목록을 JSON 배열로 변환
+					comments = pd.getCommentsByPNum(pNum);
+
+					// 댓글 목록을 JSON 배열로 변환
 //			        JSONArray jsonArray = new JSONArray();
-			        
+
 //			        for (ReplyDTO comment : comments) {
 //			        	System.out.println(comments);
 //			            JSONObject jsonComment = new JSONObject();
@@ -102,24 +178,24 @@ public class PostController extends HttpServlet {
 //			            jsonComment.put("commentText", comment.getRContent());
 //			            jsonArray.add(jsonComment);
 //			        }
-			        
-			        // 응답 데이터 생성
+
+					// 응답 데이터 생성
 //			        JSONObject jsonResponse = new JSONObject();
 //			        jsonResponse.put("comments", jsonArray);
-			        
-			        // 응답 데이터 전송
-			        Gson gson = new Gson();
-			        String json = gson.toJson(comments);
-			        response.setContentType("application/json");
-			        response.setCharacterEncoding("UTF-8");
-			        PrintWriter out = response.getWriter();
-			        out.print(json);
-			        out.flush();
+
+					// 응답 데이터 전송
+					Gson gson = new Gson();
+					String json = gson.toJson(comments);
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					PrintWriter out = response.getWriter();
+					out.print(json);
+					out.flush();
 //			        response.getWriter().print(jsonResponse.toString());
-			    } catch (SQLException e) {
-			        e.printStackTrace();
-			        // 처리 중 예외 발생 시 예외 처리
-			    }
+				} catch (SQLException e) {
+					e.printStackTrace();
+					// 처리 중 예외 발생 시 예외 처리
+				}
 
 				nextPage = "/jsp/main.jsp";
 				break;
@@ -128,12 +204,14 @@ public class PostController extends HttpServlet {
 				PostDAO pd = new PostDAO();
 				String pNum = request.getParameter("pNum");
 				String commentText = request.getParameter("commentText");
+				String mNum = (String) session.getAttribute("mNum");
 				String userId = (String) session.getAttribute("id");
 
-				if (pd.createComment(pNum, userId, commentText)) {
+				if (pd.createComment(pNum, mNum, commentText)) {
 					// JSON 형태의 응답 데이터 생성
 					JSONObject jsonResponse = new JSONObject();
-					jsonResponse.put("userName", userId);
+					jsonResponse.put("mNum", mNum);
+					jsonResponse.put("userId", userId);
 					jsonResponse.put("commentText", commentText);
 
 					// 응답 데이터 전송
@@ -146,34 +224,57 @@ public class PostController extends HttpServlet {
 				}
 				break;
 			}
+			case "/diaryDelete.do": {
+				String dnum = request.getParameter("dnum");
 
-			/*
-			 * case "/diaryInput.do": { PostDAO pd = new PostDAO();
-			 * 
-			 * String content = request.getParameter("diaryText");
-			 * 
-			 * String userID = (String)session.getAttribute("id"); String exposure =
-			 * request.getParameter("exposure"); String category = "photo"; String
-			 * originalFileName = request.getParameter("originalFileName"); String
-			 * newFileName = request.getParameter("newFileName"); String content =
-			 * request.getParameter("content");
-			 * 
-			 * 
-			 * 
-			 * if(pd.DiaryInputDAO(content)) { nextPage = "/post/my.do";
-			 * System.out.println("성공"); } else { System.out.println("실패"); nextPage =
-			 * "/test.jsp"; } break; }
-			 */
-			/*
-			 * case "/showPhotoList.do": { PostDAO pd = new PostDAO();
-			 * 
-			 * 
-			 * String userID = (String)session.getAttribute("id");
-			 * 
-			 * if(pd.insertPhoto(userID)==true) { nextPage = "/jsp/main.jsp";
-			 * System.out.println("성공"); } else { System.out.println("실패"); nextPage =
-			 * "/test.jsp"; } break; }
-			 */
+				if (dnum != null) {
+
+					try {
+						PostDAO pd = new PostDAO();
+						int result = pd.delete(dnum);
+
+						if (result > 0) {
+							response.sendRedirect(request.getContextPath() + "/post/*");
+
+						} else {
+							System.out.print("-1");
+
+						}
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+						response.getWriter().print("다이어리 삭제 실패");
+					}
+				}
+				break;
+			}
+			case "/diaryWrite.do": {
+
+				// 기본 동작: 새 일기 작성
+				String mNum = (String) session.getAttribute("mNum");
+				String title = request.getParameter("title");
+				String content = request.getParameter("content");
+
+				PostDAO pd = new PostDAO();
+				int result = pd.write(mNum, title, content);
+
+				if (result > 0) {
+					response.sendRedirect(request.getContextPath() + "/post/*");
+
+				} else {
+					System.out.print("-1");
+
+				}
+				break;
+			}
+
+			case "/logout.do": {
+				if (session != null) { // 세션을 무효화합니다.
+					session.invalidate();
+					response.sendRedirect(request.getContextPath() + "/member/");
+				}
+			}
+
 			default:
 				throw new IllegalArgumentException("Unexpected value: " + action);
 			}
